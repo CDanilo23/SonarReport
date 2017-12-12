@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Sender.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Java :: JaCoco Multi Modules :: App</a> &gt; <a href="index.source.html" class="el_package">co.com.sender</a> &gt; <span class="el_source">Sender.java</span></div><h1>Sender.java</h1><pre class="source lang-java linenums">package co.com.sender;
+
+import java.util.Properties;
+import java.util.logging.*;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueConnection;
+import javax.jms.QueueSession;
+import javax.jms.Queue;
+import javax.jms.QueueSender;
+import javax.jms.TextMessage;
+
+<span class="nc" id="L15">public class Sender {</span>
+	
+<span class="nc" id="L17">	private static final Logger log = Logger.getLogger(Sender.class.getName());</span>
+			
+	private static final String DEFAULT_MESSAGE = &quot;Hello&quot;;
+	private static final String DEFAULT_CONNECTION_FACTORY=&quot;jms/RemoteConnectionFactory&quot;;
+	private static final String DEFAULT_DESTINATION= &quot;jms/queue/ghaMessageQueue&quot;;
+	private static final String DEFAULT_MESSAGE_COUNT =&quot;1&quot;;
+	private static final String DEFAULT_USERNAME = &quot;danilo&quot;;
+	private static final String DEFAULT_PASSWORD= &quot;danilo27$&quot;;
+	private static final String INITIAL_CONTEXT_FACTORY = &quot;org.jboss.naming.remote.client.initialcontextfactory&quot;;
+	private static final String PROVIDER_URL = &quot;http://localhost:8081&quot;;
+	
+	public static void main(String [] args) {
+		
+		QueueConnection conn;
+		Queue queue;
+		QueueSession session;
+		QueueSender send;
+		TextMessage textMessage;
+<span class="nc" id="L35">		InitialContext initialContext = null;</span>
+		try {
+<span class="nc" id="L37">			System.out.println(&quot;------------------------ENTRO----------------------&quot;);</span>
+<span class="nc" id="L38">			Properties env = new Properties();</span>
+<span class="nc" id="L39">			env.put(Context.INITIAL_CONTEXT_FACTORY, INITIAL_CONTEXT_FACTORY );</span>
+<span class="nc" id="L40">			System.out.println(System.getProperty(Context.PROVIDER_URL, PROVIDER_URL));</span>
+<span class="nc" id="L41">			env.put(Context.PROVIDER_URL, System.getProperty(Context.PROVIDER_URL, PROVIDER_URL));</span>
+<span class="nc" id="L42">			env.put(Context.SECURITY_PRINCIPAL, &quot;danilo&quot; );</span>
+<span class="nc" id="L43">			env.put(Context.SECURITY_CREDENTIALS, &quot;danilo27$&quot; );</span>
+<span class="nc" id="L44">			env.put(&quot;jboss.naming.client.ejb.context&quot;, true);</span>
+<span class="nc" id="L45">			initialContext = new InitialContext(env);</span>
+<span class="nc" id="L46">			Object tmp = initialContext.lookup(&quot;QueueConnectionFactory&quot;);</span>
+<span class="nc" id="L47">			System.out.println(&quot;------------------------CREATE FACTORY----------------------&quot;);</span>
+<span class="nc" id="L48">			QueueConnectionFactory qcf = (QueueConnectionFactory) tmp;</span>
+<span class="nc" id="L49">			conn = qcf.createQueueConnection();</span>
+<span class="nc" id="L50">			queue = (Queue) initialContext.lookup(DEFAULT_DESTINATION);</span>
+<span class="nc" id="L51">			session = conn.createQueueSession(false,QueueSession.AUTO_ACKNOWLEDGE);</span>
+<span class="nc" id="L52">			conn.start();</span>
+<span class="nc" id="L53">			send = session.createSender(queue);</span>
+<span class="nc" id="L54">			textMessage = session.createTextMessage(&quot;Hola soy tu mensaje&quot;);</span>
+<span class="nc" id="L55">			send.send(textMessage);send.close();</span>
+			
+<span class="nc" id="L57">		}catch (Exception e) {</span>
+<span class="nc" id="L58">			System.out.println(&quot;------------------------FALLO CONTEXTO----------------------&quot;);</span>
+<span class="nc" id="L59">			e.printStackTrace();</span>
+<span class="nc" id="L60">		}</span>
+<span class="nc" id="L61">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

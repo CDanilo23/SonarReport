@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+<!-- 	<parent> -->
+<!-- 		<groupId>org.sonarqube</groupId> -->
+<!-- 		<artifactId>parent</artifactId> -->
+<!-- 		<version>1.0-SNAPSHOT</version> -->
+<!-- 	</parent> -->
+	<groupId>app-java</groupId>
+    <version>1.0-SNAPSHOT</version> 
+	<artifactId>app-java</artifactId>
+
+	<name>Java :: JaCoco Multi Modules :: App</name>
+	
+	<properties>
+		<sonar.jacoco.itReportPath>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
+		<sonar.groovy.binaries>target/classes</sonar.groovy.binaries>
+		<sonar.host.url>http://localhost:9000</sonar.host.url>
+	</properties>
+	
+	 <profiles>
+    <profile>
+      <id>sonar-coverage</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.jacoco</groupId>
+              <artifactId>jacoco-maven-plugin</artifactId>
+              <version>0.7.8</version>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <configuration>
+              <append>true</append>
+            </configuration>
+            <executions>
+              <execution>
+                <id>agent-for-ut</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>agent-for-it</id>
+                <goals>
+                  <goal>prepare-agent-integration</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>jacoco-site</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+<dependencies>
+
+	<dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+	
+	<!-- https://mvnrepository.com/artifact/javax.jms/javax.jms-api -->
+	<dependency>
+		<groupId>javax.jms</groupId>
+		<artifactId>javax.jms-api</artifactId>
+		<version>2.0.1</version>
+		<scope>compile</scope>
+	</dependency>
+
+	<!-- https://mvnrepository.com/artifact/org.wildfly/wildfly-controller-client -->
+	<dependency>
+	    <groupId>org.wildfly</groupId>
+	    <artifactId>wildfly-controller-client</artifactId>
+	    <version>8.2.0.Final</version>
+	    <scope>compile</scope>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/org.jboss/jboss-remote-naming -->
+<dependency>
+    <groupId>org.jboss</groupId>
+    <artifactId>jboss-remote-naming</artifactId>
+    <version>2.0.4.Final</version>
+    <scope>compile</scope>
+</dependency>
+
+
+	<dependency>
+		<groupId>org.jboss.client</groupId>
+		<artifactId>jboss-client</artifactId>
+		<version>{version}</version>
+		<scope>compile</scope>
+	</dependency>
+</dependencies>
+
+ <build>
+    <plugins>
+      <!-- any other plugins -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+		    <archive>
+		      <manifest>
+		        <mainClass>co.com.sender.Sender</mainClass>
+		      </manifest>
+		    </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
+
+</project>
